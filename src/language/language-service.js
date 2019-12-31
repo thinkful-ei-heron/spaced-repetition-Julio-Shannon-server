@@ -59,6 +59,27 @@ const LanguageService = {
       })
       .where({ id: language.id });
   },
+<<<<<<< HEAD
 };
+=======
+
+  getHeadWord(db, language_id, language_head){
+    return db
+      .from('word')
+      .select(
+        'id',
+        'language_id',
+        'original',
+        'translation',
+        'next',
+        'memory_value',
+        'correct_count',
+        'incorrect_count',
+      )
+      .where({language_id, id: language_head})
+      .first()
+  }
+}
+>>>>>>> f0d35697c9318cc0a7b20d035726bbb73b0d37c0
 
 module.exports = LanguageService;

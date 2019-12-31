@@ -42,8 +42,25 @@ languageRouter.get('/', async (req, res, next) => {
 });
 
 languageRouter.get('/head', async (req, res, next) => {
-  // implement me
-  res.send('implement me!');
+  try {
+    console.log(req.language);
+    const headWord = await LanguageService.getHeadWord(
+      req.app.get('db'),
+      req.language.id,
+      req.language.head
+    );
+    console.log(headWord);
+    res.status(200).json({
+      nextWord: headWord.original,
+      translation: headWord.translation,
+      totalScore: req.language.total_score,
+      wordCorrectCount: headWord.correct_count,
+      wordIncorrectCount: headWord.incorrect_count,
+    });
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
 languageRouter.post('/guess', async (req, res, next) => {
@@ -65,7 +82,6 @@ languageRouter.post('/guess', async (req, res, next) => {
       // increment the count and adjust the memory value and update the place in the linked list
       LanguageService.incorrectAnswer(req.app.get('db'), word);
     }
-
     res.status(200).json({ list });
   } catch (error) {
     next(error);
