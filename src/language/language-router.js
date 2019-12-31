@@ -55,6 +55,7 @@ languageRouter
       console.log(headWord);
       res.status(200).json({
           nextWord: headWord.original,
+          translation: headWord.translation,
           totalScore: req.language.total_score,
           wordCorrectCount: headWord.correct_count,
           wordIncorrectCount: headWord.incorrect_count,
