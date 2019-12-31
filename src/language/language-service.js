@@ -30,17 +30,22 @@ const LanguageService = {
   getTranslation(db, word_id) {
     return db
       .from('word')
-      .select('translation', 'memory_value', 'correct_count', 'incorrect_count')
-      .where({ id: word_id });
+      .select('id','translation', 'memory_value', 'correct_count', 'incorrect_count')
+      .where({ id: word_id })
+      .first();
   },
   correctAnswer(db, word) {
+    console.log('here');
+    console.log(word);
     return db
       .from('word')
       .update({
         memory_value: word.memory_value * 2,
         correct_count: word.correct_count + 1,
       })
-      .where({ id: word.id });
+      .where({id: word.id})
+      .returning('*')
+      .then(([word]) => word)
   },
   incorrectAnswer(db, word) {
     return db
@@ -49,19 +54,20 @@ const LanguageService = {
         memory_value: 1,
         incorrect_count: word.incorrect_count + 1,
       })
-      .where({ id: word.id });
+      .where({ id: word.id })
+      .returning('*')
+      .then(([word]) => word);
   },
   updateTotalScore(db, language) {
     return db
       .from('language')
       .update({
         total_score: language.total_score + 1,
-      })
-      .where({ id: language.id });
+      })      
+      .where({ id: language.id })
+      .returning('*')
+      .then(([language]) => language);
   },
-<<<<<<< HEAD
-};
-=======
 
   getHeadWord(db, language_id, language_head){
     return db
@@ -80,6 +86,5 @@ const LanguageService = {
       .first()
   }
 }
->>>>>>> f0d35697c9318cc0a7b20d035726bbb73b0d37c0
 
 module.exports = LanguageService;

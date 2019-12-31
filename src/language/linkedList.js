@@ -40,6 +40,10 @@ class linkedList {
     }
   }
 
+  getHeadOfList(){
+    return this.head;
+  }
+
   insertAfter(item, value) {
     // let currNode = this.head;
     // let nextNode = this.head;
@@ -62,14 +66,30 @@ class linkedList {
     currNode.next = new _Node(value, nextNode);
   }
 
+  getIndex(id){
+    let currNode = this.head;
+    let index = 0;
+    while (currNode.value.id !== id) {
+      index++;
+      currNode = currNode.next;
+    }
+    return index;
+  }
+
   insertAt(index, value) {
+    console.log(value);
     let currIndex = 0;
     let currNode = this.head;
-    while (currIndex !== index - 1) {
+    while (currIndex !== index - 1 && currNode.next !== null) {
+      console.log(currNode.value);
       currNode = currNode.next;
       currIndex++;
     }
+    if(currNode.next === null){
+      currNode.next = new _Node(value, null);
+    }else {
     currNode.next = new _Node(value, currNode.next.next);
+    }
   }
 
   find(item) {
@@ -96,7 +116,7 @@ class linkedList {
     }
     let currNode = this.head;
     let previousNode = this.head;
-    while (currNode !== null && currNode.value !== item) {
+    while (currNode !== null && currNode.value.id !== item.id) {
       previousNode = currNode;
       currNode = currNode.next;
     }

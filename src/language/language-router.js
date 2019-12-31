@@ -2,6 +2,7 @@ const express = require('express');
 const LanguageService = require('./language-service');
 const { requireAuth } = require('../middleware/jwt-auth');
 const LinkedListService = require('./linkedList-service');
+const jsonBodyParser = express.json();
 
 const languageRouter = express.Router();
 
@@ -63,24 +64,29 @@ languageRouter.get('/head', async (req, res, next) => {
   }
 });
 
-languageRouter.post('/guess', async (req, res, next) => {
+languageRouter.post( '/guess', jsonBodyParser, async (req, res, next) => {
+  if(!req.body.answer || !req.body.word_id){
+    res.status(400).json({error: 'missing required field'})
+  }
+
   try {
     const words = await LanguageService.getLanguageWords(
       req.app.get('db'),
       req.language.id
     );
     let list = await LinkedListService.createList(words);
+    console.log(list);
     let word = await LanguageService.getTranslation(
       req.app.get('db'),
-      req.word_id
+      req.body.word_id
     );
-    if (word.translation === req.answer) {
-      // update the counts and update the memory value and update the place in the linked list
-      LanguageService.correctAnswer(req.app.get('db'), word);
-      LanguageService.updateTotalScore(req.app.get('db'), req.language);
+    if (word.translation === req.body.answer) {
+      let updatedWord = await LanguageService.correctAnswer(req.app.get('db'), word);
+      let language = await LanguageService.updateTotalScore(req.app.get('db'), req.language);
+      LinkedListService.updatePositionRight(list, updatedWord)
     } else {
-      // increment the count and adjust the memory value and update the place in the linked list
-      LanguageService.incorrectAnswer(req.app.get('db'), word);
+      let updatedWord = await LanguageService.incorrectAnswer(req.app.get('db'), word);
+      LinkedListService.updatePositionWrong(list, updatedWord)
     }
     res.status(200).json({ list });
   } catch (error) {
