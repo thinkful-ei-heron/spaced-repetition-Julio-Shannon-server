@@ -27,45 +27,46 @@ const LanguageService = {
       )
       .where({ language_id });
   },
-  getTranslation(db, word_id) {
-    return db
-      .from('word')
-      .select('id','translation', 'memory_value', 'correct_count', 'incorrect_count')
-      .where({ id: word_id })
-      .first();
-  },
-  correctAnswer(db, word) {
-    return db
-      .from('word')
-      .update({
-        memory_value: word.memory_value * 2,
-        correct_count: word.correct_count + 1,
-      })
-      .where({id: word.id})
-      .returning('*')
-      .then(([word]) => word)
-  },
-  incorrectAnswer(db, word) {
-    return db
-      .from('word')
-      .update({
-        memory_value: 1,
-        incorrect_count: word.incorrect_count + 1,
-      })
-      .where({ id: word.id })
-      .returning('*')
-      .then(([word]) => word);
-  },
-  updateTotalScore(db, language) {
-    return db
-      .from('language')
-      .update({
-        total_score: language.total_score + 1,
-      })      
-      .where({ id: language.id })
-      .returning('*')
-      .then(([language]) => language);
-  },
+  // getTranslation(db, word_id) {
+  //   return db
+  //     .from('word')
+  //     .select('id','translation', 'memory_value', 'correct_count', 'incorrect_count')
+  //     .where({ id: word_id })
+  //     .first();
+  // },
+  // correctAnswer(db, word) {
+  //   return db
+  //     .from('word')
+  //     .update({
+  //       memory_value: word.memory_value * 2,
+  //       correct_count: word.correct_count + 1,
+  //     })
+  //     .where({id: word.id})
+  //     .returning('*')
+  //     .then(([word]) => word)
+  // },
+  // incorrectAnswer(db, word) {
+  //   return db
+  //     .from('word')
+  //     .update({
+  //       memory_value: 1,
+  //       incorrect_count: word.incorrect_count + 1,
+  //     })
+  //     .where({ id: word.id })
+  //     .returning('*')
+  //     .then(([word]) => word);
+  // },
+
+  // updateTotalScore(db, language) {
+  //   return db
+  //     .from('language')
+  //     .update({
+  //       total_score: language.total_score + 1,
+  //     })      
+  //     .where({ id: language.id })
+  //     .returning('*')
+  //     .then(([language]) => language);
+  // },
 
   getHeadWord(db, language_id, language_head){
     return db

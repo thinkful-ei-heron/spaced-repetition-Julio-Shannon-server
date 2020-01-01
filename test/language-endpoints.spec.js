@@ -1,13 +1,8 @@
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-<<<<<<< HEAD
-describe('Language Endpoints', function() {
-  let db;
-=======
 describe.only('Language Endpoints', function () {
   let db
->>>>>>> f0d35697c9318cc0a7b20d035726bbb73b0d37c0
 
   const testUsers = helpers.makeUsersArray();
   const [testUser] = testUsers;

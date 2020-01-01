@@ -52,6 +52,7 @@ languageRouter.get('/head', async (req, res, next) => {
     );
     res.status(200).json({
       nextWord: headWord.original,
+      //translation makes the test no longer pass
       translation: headWord.translation,
       totalScore: req.language.total_score,
       wordCorrectCount: headWord.correct_count,
@@ -64,8 +65,8 @@ languageRouter.get('/head', async (req, res, next) => {
 });
 
 languageRouter.post( '/guess', jsonBodyParser, async (req, res, next) => {
-  if(!req.body.answer){
-    return res.status(400).json({error: 'missing required field'})
+  if(!req.body.guess){
+    return res.status(400).json({error: 'Missing \'guess\' in request body'})
   }
 
   try {
@@ -80,7 +81,7 @@ languageRouter.post( '/guess', jsonBodyParser, async (req, res, next) => {
       req.language.head
     );
     let total = req.language.total_score;
-    let answer = req.body.answer.toLowerCase();
+    let guess = req.body.guess.toLowerCase();
     let memoryValue = headWord.memory_value;
     let correct_count = headWord.correct_count;
     let incorrect_count = headWord.incorrect_count;
@@ -96,7 +97,7 @@ languageRouter.post( '/guess', jsonBodyParser, async (req, res, next) => {
       tempNode = await LanguageService.getNextWord(req.app.get('db'), tempNode.next);
     }
 
-    if(answer === headWord.translation.toLowerCase()) {
+    if(guess === headWord.translation.toLowerCase()) {
       total++;
       memoryValue = memoryValue * 2;
       correct_count++;
@@ -111,7 +112,7 @@ languageRouter.post( '/guess', jsonBodyParser, async (req, res, next) => {
       result,
       original: headWord.original,
       translation: headWord.translation,
-      userGuessed: answer,
+      userGuessed: guess,
       total,
       correct_count,
       incorrect_count
