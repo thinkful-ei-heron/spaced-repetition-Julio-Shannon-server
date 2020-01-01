@@ -35,8 +35,6 @@ const LanguageService = {
       .first();
   },
   correctAnswer(db, word) {
-    console.log('here');
-    console.log(word);
     return db
       .from('word')
       .update({
@@ -83,6 +81,23 @@ const LanguageService = {
         'incorrect_count',
       )
       .where({language_id, id: language_head})
+      .first()
+  },
+
+  getNextWord(db, word_id){
+    return db
+    .from('word')
+      .select(
+        'id',
+        'language_id',
+        'original',
+        'translation',
+        'next',
+        'memory_value',
+        'correct_count',
+        'incorrect_count',
+      )
+      .where({ id: word_id})
       .first()
   }
 }

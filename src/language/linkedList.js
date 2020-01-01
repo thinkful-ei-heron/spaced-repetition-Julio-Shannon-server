@@ -77,11 +77,9 @@ class linkedList {
   }
 
   insertAt(index, value) {
-    console.log(value);
     let currIndex = 0;
     let currNode = this.head;
     while (currIndex !== index - 1 && currNode.next !== null) {
-      console.log(currNode.value);
       currNode = currNode.next;
       currIndex++;
     }
@@ -210,7 +208,6 @@ class linkedList {
 
   middleOfList(list) {
     let currNode = list.head;
-    console.log(currNode);
     let middleNode = list.head;
     let cnt = 0;
     if (currNode === null) return null;
