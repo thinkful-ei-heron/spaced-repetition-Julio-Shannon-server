@@ -52,8 +52,6 @@ languageRouter.get('/head', async (req, res, next) => {
     );
     res.status(200).json({
       nextWord: headWord.original,
-      //translation makes the test no longer pass
-      //translation: headWord.translation,
       totalScore: req.language.total_score,
       wordCorrectCount: headWord.correct_count,
       wordIncorrectCount: headWord.incorrect_count,
@@ -70,11 +68,6 @@ languageRouter.post( '/guess', jsonBodyParser, async (req, res, next) => {
   }
 
   try {
-    // const words = await LanguageService.getLanguageWords(
-    //   req.app.get('db'),
-    //   req.language.id
-    // );
-//start new attempt LL
     let headWord = await LanguageService.getHeadWord(
       req.app.get('db'),
       req.language.id,
@@ -183,23 +176,6 @@ languageRouter.post( '/guess', jsonBodyParser, async (req, res, next) => {
         answer: headWord.translation,
         isCorrect: result === 'correct' ? true : false
       }
-  
-//end new attempt LL
-
-    // let list = await LinkedListService.createList(words);
-    // let word = await LanguageService.getTranslation(
-    //   req.app.get('db'),
-    //   req.body.word_id
-    // );
-
-    // if (word.translation === req.body.answer) {
-    //   let updatedWord = await LanguageService.correctAnswer(req.app.get('db'), word);
-    //   let language = await LanguageService.updateTotalScore(req.app.get('db'), req.language);
-    //   LinkedListService.updatePositionRight(list, updatedWord)
-    // } else {
-    //   let updatedWord = await LanguageService.incorrectAnswer(req.app.get('db'), word);
-    //   LinkedListService.updatePositionWrong(list, updatedWord)
-    // }
     res.status(200).json(testResult);
   } catch (error) {
     next(error);
