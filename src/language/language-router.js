@@ -96,6 +96,8 @@ languageRouter.post( '/guess', jsonBodyParser, async (req, res, next) => {
       wordList.insertLast(tempNode);
       tempNode = await LanguageService.getNextWord(req.app.get('db'), tempNode.next);
     }
+    wordList.insertLast(tempNode);
+
 
     if(guess === headWord.translation.toLowerCase()) {
       total++;
@@ -123,6 +125,7 @@ languageRouter.post( '/guess', jsonBodyParser, async (req, res, next) => {
       total_score: total
     }
 
+    //setting the req.language.head value so we know what the next word is.
     req.language.head = headWord.next
 
     await LinkedListService.updateLanguageTable(
@@ -147,7 +150,7 @@ languageRouter.post( '/guess', jsonBodyParser, async (req, res, next) => {
       memory_value: memoryValue,
       correct_count,
       incorrect_count,
-      next: temp2.next.value.id
+      next: temp2.next ? temp2.next.value.id : null
     }
 
     let updateNext = {
