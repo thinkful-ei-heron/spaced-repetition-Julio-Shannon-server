@@ -53,7 +53,7 @@ languageRouter.get('/head', async (req, res, next) => {
     res.status(200).json({
       nextWord: headWord.original,
       //translation makes the test no longer pass
-      translation: headWord.translation,
+      //translation: headWord.translation,
       totalScore: req.language.total_score,
       wordCorrectCount: headWord.correct_count,
       wordIncorrectCount: headWord.incorrect_count,
@@ -172,6 +172,17 @@ languageRouter.post( '/guess', jsonBodyParser, async (req, res, next) => {
         req.language.id,
         req.language.head
       );
+
+      //per tests, this is the goal of what should be returned from the /guess endpoint
+      let testResult = 
+      {
+        nextWord: nextWord.original,
+        totalScore: total,
+        wordCorrectCount: correct_count,
+        wordIncorrectCount: incorrect_count,
+        answer: headWord.translation,
+        isCorrect: result === 'correct' ? true : false
+      }
   
 //end new attempt LL
 
@@ -189,7 +200,7 @@ languageRouter.post( '/guess', jsonBodyParser, async (req, res, next) => {
     //   let updatedWord = await LanguageService.incorrectAnswer(req.app.get('db'), word);
     //   LinkedListService.updatePositionWrong(list, updatedWord)
     // }
-    res.status(200).json([{returnResults}, {nextWord}]);
+    res.status(200).json(testResult);
   } catch (error) {
     next(error);
   }
