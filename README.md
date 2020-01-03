@@ -1,52 +1,31 @@
-# Spaced repetition API!
+# Spaced repetition API Server
 
-## Local dev setup
+## Created By: Julio Hernandez & Shannon Lichtenwalter
 
-If using user `dunder-mifflin`:
+### Links 
+See it Live: https://spaced-repetition-julio-shannon-client.now.sh/
+Client Repo: https://github.com/thinkful-ei-heron/spaced-repetition-Julio-Shannon-client
+Server Repo: https://github.com/thinkful-ei-heron/spaced-repetition-Julio-Shannon-server
 
-```bash
-mv example.env .env
-createdb -U dunder-mifflin spaced-repetition
-createdb -U dunder-mifflin spaced-repetition-test
-```
 
-If your `dunder-mifflin` user has a password be sure to set it in `.env` for all appropriate fields. Or if using a different user, update appropriately.
+### Introduction
 
-```bash
-npm install
-npm run migrate
-env MIGRATION_DB_NAME=spaced-repetition-test npm run migrate
-```
+This server is used in conjunction with the spaced-repetition learning platform front-end client.
 
-And `npm test` should work at this point
+### Technology Stack
+This API server was built using Nodejs, Express, Javascript, and PostgreSQL. The server and database are deployed on Heroku. 
 
-## Configuring Postgres
+### Endpoints
 
-For tests involving time to run properly, configure your Postgres database to run in the UTC timezone.
+#### /api/auth/token : 
+    POST this endpoint verifies login is correct and returns JWT auth token. 
 
-1. Locate the `postgresql.conf` file for your Postgres installation.
-   1. E.g. for an OS X, Homebrew install: `/usr/local/var/postgres/postgresql.conf`
-   2. E.g. on Windows, _maybe_: `C:\Program Files\PostgreSQL\11.2\data\postgresql.conf`
-   3. E.g  on Ubuntu 18.04 probably: '/etc/postgresql/10/main/postgresql.conf'
-2. Find the `timezone` line and set it to `UTC`:
+    PUT will refresh the JWT auth token for a logged in user.
 
-```conf
-# - Locale and Formatting -
+#### /api/language :
+    GET (/) this endpoint returns the language table data for a logged in user.
+    GET (/head) this endpoint returns the headWord (next word to practice) for a logged in user.
+    POST (/guess) this endpoint determines if a user's guess is correct or incorrect. It updates that database accordingly based on the spaced repetition learning algorithm and returns the next word for the user to practice.
 
-datestyle = 'iso, mdy'
-#intervalstyle = 'postgres'
-timezone = 'UTC'
-#timezone_abbreviations = 'Default'     # Select the set of available time zone
-```
-
-## Scripts
-
-Start the application `npm start`
-
-Start nodemon for the application `npm run dev`
-
-Run the tests mode `npm test`
-
-Run the migrations up `npm run migrate`
-
-Run the migrations down `npm run migrate -- 0`
+#### /api/user:
+    -POST: will add a new user (register) to the database
